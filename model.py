@@ -10,7 +10,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 
 import output
-
+'''
 model_list = [
     'LGR',
     'SVC',
@@ -18,6 +18,14 @@ model_list = [
     'RFC',
     'KNNC',
     'MLPC',
+]
+'''
+
+model_list = [
+    'LGR',
+    'SVC',
+    'DTC',
+    'RFC',
 ]
 
 # split dataframe into columns
@@ -49,21 +57,18 @@ def vectorize_observed_data_with_maxfeatures(observed_data, max_features):
 
 def get_set_matrix(observed_data, label_data, test_size):
     set_matrix = train_test_split(observed_data, label_data, test_size=test_size, random_state=4)
-    return set_matrix
-
-def iterate_through_model_list():
-    pass    
+    return set_matrix   
 
 # run model functions
 def run_all_models(observed_data, label_data, test_size):
-    '''shuffle=True for randomization of data before splitting'''
+    # split observed and label data into testset and trainingset
     X_train, X_test, y_train, y_test = train_test_split(observed_data, label_data, test_size=test_size, random_state=4)
 
     output.print_table_header()
     for i in model_list:
         if i == 'LGR':
             model = LogisticRegression(solver='lbfgs', max_iter=1000)
-        elif i == 'SVMC':
+        elif i == 'SVC':
             model = LinearSVC(max_iter=1000)
         elif i == 'DTC':
             model = DecisionTreeClassifier()
@@ -84,9 +89,26 @@ def run_all_models(observed_data, label_data, test_size):
 
 # TODO: Decide what functions to keep here
 
+def get_SKLearn_model(model_name):
+    if model_name == 'LogisticRegression':
+        model = LogisticRegression(solver='lbfgs', max_iter=1000)
+    elif model_name == 'LinearSVClassifier':
+        model = LinearSVC(max_iter=1000)
+    elif model_name == 'DecisionTreeClassifier':
+        model = DecisionTreeClassifier()
+    elif model_name == 'RandomForestClassifier':
+        model = RandomForestClassifier(n_estimators=50)
+    elif model_name == 'KNearestNeighborClassifier':
+        model = KNeighborsClassifier()
+    elif model_name == 'MultiLayerPerceptronClassifier':
+        model = MLPClassifier()
+    else:
+        pass
+    return model
+
+
 # run machine learning model with defined test_size
 def run_model(model_name, observed_data, label_data, test_size):
-    '''shuffle=True for randomization of data before splitting'''
     X_train, X_test, y_train, y_test = train_test_split(observed_data, label_data, test_size=test_size, random_state=4)
 
     if model_name == 'LogisticRegression':
